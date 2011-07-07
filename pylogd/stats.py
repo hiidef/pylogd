@@ -9,6 +9,7 @@ import random
 import socket
 import traceback
 import logging
+import functools
 
 logger = logging.getLogger(__name__)
 
@@ -64,6 +65,18 @@ class Logd(object):
     def time(self, stat, time, sample_rate=1):
         """Log timing information."""
         self.send({'id': TIMER, 'key': stat, 'value': time}, sample_rate)
+
+    def timed(self, name, sample_rate=1):
+        """A decorator that wraps a function call in a timed block."""
+        def decorator(f):
+            @functools.wrap(f)
+            def wrapped(*args, **kwargs):
+                self.timer.start(name, sample_rate)
+                ret = f(*args, **kwargs)
+                self.timer.end(name)
+                return ret
+            return wrapped
+        return decorator
 
     def increment(self, stat, sample_rate=1):
         """Increment a counter."""
