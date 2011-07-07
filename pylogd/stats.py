@@ -15,13 +15,53 @@ logger = logging.getLogger(__name__)
 COUNTER = 2
 TIMER = 3
 
+class Timer(object):
+    def __init__(self, logd):
+        self.logd = logd
+        self.timers = {}
+        self.accs = {}
+
+    def start(self, name, sample_rate=1):
+        """Start a simple timer.  If a timer is started twice in a row, the
+        old timing information is never sent."""
+        self.timers[name] = (time.time(), sample_rate)
+
+    def end(self, name):
+        """End a timer and send a delta to logd."""
+        if name not in self.timers:
+            return
+        t0, sample_rate = self.timers.pop(name)
+        dt = time.time() - t0
+        self.logd.time(name, dt, sample_rate)
+
+    def start_accumulator(self, name, sample_rate=1):
+        """Start an accumulator.  This is a timer that can take multiple
+        readings before being sent out so you can measure aggregate time
+        spent on certain tasks (network wait, etc)."""
+        if name in self.accs:
+            self.accs[name][0] = time.time()
+        else:
+            self.accs[name] = (time.time(), sample_rate, 0)
+
+    def end_accumulator(self, name):
+        """End an accumulator section."""
+        if name not in self.accs:
+            return
+        t0, sample_rate, acc = self.accs[name]
+        acc += time.time() - t0
+        self.accs[name] = (0, sample_rate, acc)
+
+    def flush(self):
+        """Flush all accumulators."""
+
 class Logd(object):
 
     def __init__(self, host='localhost', port=8126):
         self.addr = (host, port)
         self.sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+        self.timer = Timer(self)
 
-    def timer(self, stat, time, sample_rate=1):
+    def time(self, stat, time, sample_rate=1):
         """Log timing information."""
         self.send({'id': TIMER, 'key': stat, 'value': time}, sample_rate)
 
