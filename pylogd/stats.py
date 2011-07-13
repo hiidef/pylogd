@@ -52,14 +52,25 @@ class Timer(object):
         acc += time.time() - t0
         self.accs[name] = (0, sample_rate, acc)
 
+    def flush_accumulator(self, name):
+        """Flush an accumulator to logd."""
+        if name not in self.accs:
+            return
+        _, sample_rate, dt = self.accs.pop(name)
+        self.logd.time(name, dt, sample_rate)
+
     def flush(self):
         """Flush all accumulators."""
+        for name in list(self.accs):
+            _, sample_rate, dt = self.accs.pop(name)
+            self.logd.time(name, dt, sample_rate)
 
 class Logd(object):
 
-    def __init__(self, host='localhost', port=8126):
+    def __init__(self, host='localhost', port=8126, prefix=''):
         self.addr = (host, port)
         self.sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+        self.prefix = prefix
         self.timer = Timer(self)
 
     def time(self, stat, time, sample_rate=1):
@@ -96,7 +107,8 @@ class Logd(object):
             if random.random() <= sample_rate:
                 return
             data['rate'] = sample_rate
-
+        if self.prefix:
+            data[key] = '%s:%s' % (self.prefix, data[key])
         msg = msgpack.dumps(data)
         try:
             self.sock.sendto(msg, self.addr)
