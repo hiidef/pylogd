@@ -4,6 +4,7 @@
 """Logd's stats implementation.  Similar to the python_example in statsd's
 repository."""
 
+import time
 import msgpack
 import random
 import socket
@@ -34,6 +35,8 @@ class Timer(object):
         t0, sample_rate = self.timers.pop(name)
         dt = time.time() - t0
         self.logd.time(name, dt, sample_rate)
+
+    stop = end
 
     def start_accumulator(self, name, sample_rate=1):
         """Start an accumulator.  This is a timer that can take multiple
@@ -108,7 +111,7 @@ class Logd(object):
                 return
             data['rate'] = sample_rate
         if self.prefix:
-            data[key] = '%s:%s' % (self.prefix, data[key])
+            data['key'] = '%s:%s' % (self.prefix, data['key'])
         msg = msgpack.dumps(data)
         try:
             self.sock.sendto(msg, self.addr)
