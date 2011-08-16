@@ -114,7 +114,7 @@ class Logd(object):
     def send(self, data, sample_rate=1):
         """Send data over the wire to logd."""
         if sample_rate < 1:
-            if random.random() <= sample_rate:
+            if random.random() > sample_rate:
                 return
             data['rate'] = sample_rate
         if self.prefix:
