@@ -30,7 +30,7 @@ class PylogdHandler(DatagramHandler):
             'path': self.path,
             'pid': record.process,
             'time': record.created,
-            'msg': record.msg,
+            'msg': record.message,
             'level': record.levelname,
             'loc': '%s %s:%s' % (record.pathname, record.funcName, record.lineno),
         }
