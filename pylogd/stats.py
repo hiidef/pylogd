@@ -14,8 +14,11 @@ import functools
 
 logger = logging.getLogger(__name__)
 
+# these are taken from logd.js
+
 COUNTER = 2
 TIMER = 3
+METER = 5
 
 class Timer(object):
     def __init__(self, logd):
@@ -91,6 +94,10 @@ class Logd(object):
                 return ret
             return wrapped
         return decorator
+
+    def set(self, stat, value, sample_rate=1):
+        """Set a meter."""
+        self.send({'id': METER, 'key': stat, 'value': value}, sample_rate)
 
     def increment(self, stat, sample_rate=1):
         """Increment a counter."""
