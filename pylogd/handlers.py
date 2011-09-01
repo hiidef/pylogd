@@ -24,13 +24,14 @@ class PylogdHandler(DatagramHandler):
         if ei:
             dummy = self.format(record) # just to get traceback text into record.exc_text
             record.exc_info = None  # to avoid Unpickleable error
+        m = getattr(record, 'message', record.msg)
         msg = {
             'id': 1, # log message type
             'name': record.name,
             'path': self.path,
             'pid': record.process,
             'time': record.created,
-            'msg': record.message,
+            'msg': m,
             'level': record.levelname,
             'loc': '%s %s:%s' % (record.pathname, record.funcName, record.lineno),
         }
