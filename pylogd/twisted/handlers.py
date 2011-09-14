@@ -14,11 +14,5 @@ class PylogdHandler(handlers.PylogdHandler):
         handlers.PylogdHandler.__init__(self, host, port)
 
     def makeSocket(self):
+        """Re-implement makeSocket to use twisted UDPSocket."""
         return socket.UDPSocket(self.host, self.path)
-
-    def createSocket(self):
-        if not self.sock:
-            self.sock = makeSocket()
-
-    def send(self, msg):
-        pass
