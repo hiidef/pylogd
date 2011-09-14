@@ -11,7 +11,7 @@ class PylogdHandler(handlers.PylogdHandler):
         port = int(port)
         self.path = path
         # the eventual base of handlers.PylogdHandler is not new-style
-        handlers.PylogdHandler.__init__(self, port, host)
+        handlers.PylogdHandler.__init__(self, path, host=host, port=port)
 
     def makeSocket(self):
         """Re-implement makeSocket to use twisted UDPSocket."""
