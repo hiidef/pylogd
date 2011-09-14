@@ -37,6 +37,5 @@ class UDPSocket(DatagramProtocol):
             # trying to log before connection yields an assertion error
             pass
 
-
     def close(self):
         return
