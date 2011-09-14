@@ -12,20 +12,31 @@ class UDPSocket(DatagramProtocol):
     def __init__(self, host, port):
         self.host = host
         self.port = port
+        self.task = None
         reactor.callWhenRunning(self.connect)
 
     def connect(self):
-        self.task = reactor.listenUDP(self)
+        self.task = reactor.listenUDP(0, self)
+
+    def connectTransport(self, ip):
+        print " **** Connecting to %s:%s" % (ip, self.port)
+        self.transport.connect(ip, self.port)
 
     def startProtocol(self):
-        self.transport.connect(host, port)
+        """Start the protocol.  Resolve the host in case it is a hostname,
+        then call connect on the resulting ip and configured port."""
+        reactor.resolve(self.host).addCallback(self.connectTransport)
 
     def sendto(self, msg, addr):
         # ignore the addr, because we only send to one place
         try:
             self.transport.write(msg)
-        except:
-            traceback.print_exc()
+        except AttributeError:
+            # trying to log before twisted is running, nothing we can really do
+            pass
+        except AssertionError:
+            # trying to log before connection yields an assertion error
+            pass
 
 
     def close(self):
