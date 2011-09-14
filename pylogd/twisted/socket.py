@@ -19,7 +19,6 @@ class UDPSocket(DatagramProtocol):
         self.task = reactor.listenUDP(0, self)
 
     def connectTransport(self, ip):
-        print " **** Connecting to %s:%s" % (ip, self.port)
         self.transport.connect(ip, self.port)
 
     def startProtocol(self):
