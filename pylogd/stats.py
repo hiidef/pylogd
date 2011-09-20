@@ -18,7 +18,7 @@ logger = logging.getLogger(__name__)
 
 COUNTER = 2
 TIMER = 3
-METER = 5
+METER = 4
 
 class Timer(object):
     def __init__(self, logd):
