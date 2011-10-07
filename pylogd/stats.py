@@ -126,3 +126,10 @@ class Logd(object):
             # ironically, this might make its way to logd...
             logging.error("unexpected error:\n%s" % traceback.format_exc())
 
+
+class Dummy(Logd):
+    """A version of stats.Logd which does not send stats over the wire. """
+
+    def send(self, data, sample_rate=1):
+        """Do not send any data (DUMMY)."""
+        return None
