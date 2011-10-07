@@ -124,7 +124,7 @@ class Logd(object):
             self.sock.sendto(msg, self.addr)
         except:
             # ironically, this might make its way to logd...
-            logging.error("unexpected error:\n%s" % traceback.format_exc())
+            logger.error("unexpected error:\n%s" % traceback.format_exc())
 
 
 class Dummy(Logd):
