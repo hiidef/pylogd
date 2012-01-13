@@ -25,7 +25,7 @@ def delete_log(path, host='localhost', port=8126):
     addr = (host, port)
     sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
     try:
-        sock.sendto(msgpack.dumps({'id': DELETE_LOG, 'key': path}), addr)
+        sock.sendto(msgpack.dumps({'id': DELETE_LOG, 'path': path}), addr)
     except:
         logger.error("unexpected error:\n%s" % traceback.format_exc())
 
