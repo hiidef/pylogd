@@ -7,14 +7,17 @@ to logd over a UDP socket.
 usage
 -----
 
-pylogd ships two utilities to deal with `logd`_, python `logging`_ handlers,
+pylogd ships various utilities to deal with `logd`_, python `logging`_ handlers,
 and a ``Stats`` object which makes it trivial to record statistics.
 
-In order to use pylogd, create a new handler with your logd server's host and
-port and then set it up as your default logging handler::
+logging
+~~~~~~~
+
+To log to logd using the python logging module, create a new handler with your
+logd server's host and port and then set it up as your default logging handler::
 
     from pylogd.handlers import PylogdHandler
-    handler = PylogdHandler('127.0.0.1', 8126)
+    handler = PylogdHandler('mylogpath.log', '127.0.0.1', 8126)
     logger = logging.getLogger()
     logger.setHandler(handler)
 
@@ -22,13 +25,25 @@ Now, subsequent calls to ``logger.(error|warn|etc)`` will log to your logd
 server.  If you do this on the root logger (``getLogger('base')``), it will
 apply to all subsequently created loggers.
 
+To delete a log, use ``pylogd.delete_log`` with the host and port of logd::
+
+    from pylogd import delete_log
+    delete_log('mylogpath.log', host='127.0.0.1', 8126)
+
+stats
+~~~~~
+
 To use stats, create a stats handle::
 
     from pylogd.stats import Logd
     stats = Logd('127.0.0.1', 8126)
 
-From there, you can increment & decrment counters (with an optional sample 
-rate)::
+You can also supply an optional prefix which will be prepended to all of your
+stats, so that multiple applications can use the same logd/graphite server
+without having to repeate their per-app key for every stats call.
+
+Once you have a Logd object, you can increment & decrment counters (with an 
+optional sample rate)::
 
     stats.increment('my.counter')
     stats.change_by('my.counter', 10)
@@ -57,11 +72,12 @@ There's a basic time interface as well as a convenient timer interface::
     stats.timer.start_accumulator('timers.mysql')
     do_some_mysql_stuff()
     stats.timer.stop_accumulator('timers.mysql')
-
+    non_mysql_things()
     stats.timer.start_accumulator('timers.mysql')
     do_some_more_mysql_stuff()
     stats.timer.stop_accumulator('timers.mysql')
 
+    # send this timing information to logd
     stats.timer.flush_accumulator('timers.mysql')
 
 

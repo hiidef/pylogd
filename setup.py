@@ -21,11 +21,11 @@ setup(
     long_description=open('README.rst').read(),
     # Get strings from http://pypi.python.org/pypi?%3Aaction=list_classifiers
     classifiers=[
-        'Development Status :: 3 - Alpha',
+        'Development Status :: 4 - Beta',
         'License :: OSI Approved :: MIT License',
         'Intended Audience :: Developers',
     ],
-    keywords='logd python udp logging server',
+    keywords='logd python udp logging server client',
     author='Jason Moiron',
     author_email='jason@hiidef.com',
     url="'http://github.com/hiidef/logd'",
