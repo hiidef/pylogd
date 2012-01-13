@@ -12,6 +12,7 @@ VERSION = (0, 2)
 import socket
 import msgpack
 import logging
+import traceback
 
 logger = logging.getLogger(__name__)
 
@@ -24,7 +25,7 @@ def delete_log(path, host='localhost', port=8126):
     addr = (host, port)
     sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
     try:
-        sock.sendto(msgpack.dumps({'id': DELETE_LOG, 'key': path}))
+        sock.sendto(msgpack.dumps({'id': DELETE_LOG, 'key': path}), addr)
     except:
         logger.error("unexpected error:\n%s" % traceback.format_exc())
 
