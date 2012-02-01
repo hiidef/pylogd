@@ -10,7 +10,6 @@ __all__ = ['VERSION', 'delete_log']
 VERSION = (0, 2)
 
 import socket
-import msgpack
 import logging
 import traceback
 
@@ -22,6 +21,7 @@ def delete_log(path, host='localhost', port=8126):
     """Delete the log at `path`.  This uses the DELETE_LOG message type
     in logd, so this is done over UDP and is thus async and can potentially
     fail."""
+    import msgpack
     addr = (host, port)
     sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
     try:
