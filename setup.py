@@ -5,9 +5,6 @@
 
 from setuptools import setup, find_packages
 
-from pylogd import VERSION
-version = '.'.join(map(str, VERSION))
-
 # some trove classifiers:
 
 # License :: OSI Approved :: MIT License
@@ -16,7 +13,7 @@ version = '.'.join(map(str, VERSION))
 
 setup(
     name='pylogd',
-    version=version,
+    version="0.2",
     description="logd python library",
     long_description=open('README.rst').read(),
     # Get strings from http://pypi.python.org/pypi?%3Aaction=list_classifiers
