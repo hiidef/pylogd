@@ -7,7 +7,7 @@ handlers for easily recording and sending stats."""
 
 __all__ = ['VERSION', 'delete_log']
 
-VERSION = (0, 2)
+VERSION = (0, 3)
 
 import socket
 import logging

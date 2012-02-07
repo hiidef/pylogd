@@ -14,7 +14,7 @@ class UDPSocket(DatagramProtocol):
         self.port = port
         self.task = None
         reactor.callWhenRunning(self.connect)
-
+    
     def connect(self):
         self.task = reactor.listenUDP(0, self)
 
@@ -37,5 +37,6 @@ class UDPSocket(DatagramProtocol):
             # trying to log before connection yields an assertion error
             pass
 
-    def close(self):
-        return
+    def stopProtocol(self):
+        self.task.stopListening()
+        DatagramProtocol.stopProtocol(self)
