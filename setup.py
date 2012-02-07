@@ -7,13 +7,16 @@ from setuptools import setup, find_packages
 
 # some trove classifiers:
 
+from pylogd import VERSION
+version = '.'.join(map(str, VERSION))
+
 # License :: OSI Approved :: MIT License
 # Intended Audience :: Developers
 # Operating System :: POSIX
 
 setup(
     name='pylogd',
-    version="0.2",
+    version=version,
     description="logd python library",
     long_description=open('README.rst').read(),
     # Get strings from http://pypi.python.org/pypi?%3Aaction=list_classifiers

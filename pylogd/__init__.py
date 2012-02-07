@@ -5,7 +5,9 @@
 a logging handler for sending messages to logd and some simple to use stats
 handlers for easily recording and sending stats."""
 
-__all__ = ['delete_log']
+__all__ = ['VERSION', 'delete_log']
+
+VERSION = (0, 2)
 
 import socket
 import logging
