@@ -11,6 +11,7 @@ import socket
 import traceback
 import logging
 import functools
+from threading import local
 
 logger = logging.getLogger(__name__)
 
@@ -71,9 +72,10 @@ class Timer(object):
             _, sample_rate, dt = self.accs.pop(name)
             self.logd.time(name, dt, sample_rate)
 
-class Logd(object):
+class Logd(local):
 
     def __init__(self, host='localhost', port=8126, prefix=''):
+        super(Logd, self).__init__()
         self.addr = (host, port)
         self.sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
         self.prefix = prefix
